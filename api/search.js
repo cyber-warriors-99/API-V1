@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
         // Yeh code phone number, aadhar, ya kisi bhi column me lowercase/uppercase ka jhanjhat khatam kar dega
         // Yeh query bhejega ki table me kahin bhi 'q' (aapka number) match ho jaye
         const { data, error } = await supabase
-            .from('Mukesh-Api') 
+            .from('Mukesh-api') 
             .select('*')
             .or(`phoneNumber.ilike.%${q}%,aadharNumber.ilike.%${q}%`); 
 
