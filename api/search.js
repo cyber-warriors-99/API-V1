@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
     try {
         // Yahan se humne extra double quotes hata diye hain, ab direct naam likha hai
         const { data, error } = await supabase
-            .from('Mukesh-Api') 
+            .from('Mukesh-api') 
             .select('*')
             .eq('phoneNumber', q); 
 
