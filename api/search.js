@@ -15,21 +15,29 @@ module.exports = async (req, res) => {
     }
 
     try {
-        // Yeh code phone number, aadhar, ya kisi bhi column me lowercase/uppercase ka jhanjhat khatam kar dega
-        // Yeh query bhejega ki table me kahin bhi 'q' (aapka number) match ho jaye
-        const { data, error } = await supabase
+        // STEP 1: Pehle hum database se saara data fetch karenge
+        const { data: allData, error } = await supabase
             .from('Mukesh-api') 
-            .select('*')
-            .or(`phoneNumber.ilike.%${q}%,aadharNumber.ilike.%${q}%`); 
+            .select('*'); 
 
         if (error) {
             return res.status(400).json({ status: "error", message: error.message });
         }
 
+        // STEP 2: Ab hum JavaScript ke throug har ek record ke andar check karenge 
+        // ki user ka search kiya hua number kahin bhi match ho raha hai ya nahi.
+        // Isse column name chota-bada hone ka error 100% solve ho jata hai.
+        const filteredData = allData.filter(row => {
+            return Object.values(row).some(value => 
+                String(value).toLowerCase().includes(String(q).toLowerCase())
+            );
+        });
+
+        // STEP 3: Response return karein
         return res.status(200).json({
             status: "success",
-            results_count: data.length,
-            data: data
+            results_count: filteredData.length,
+            data: filteredData
         });
 
     } catch (err) {
