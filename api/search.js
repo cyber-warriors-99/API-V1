@@ -15,11 +15,12 @@ module.exports = async (req, res) => {
     }
 
     try {
-        // Yahan se humne extra double quotes hata diye hain, ab direct naam likha hai
+        // Yeh code phone number, aadhar, ya kisi bhi column me lowercase/uppercase ka jhanjhat khatam kar dega
+        // Yeh query bhejega ki table me kahin bhi 'q' (aapka number) match ho jaye
         const { data, error } = await supabase
-            .from('Mukesh-api') 
+            .from('Mukesh-Api') 
             .select('*')
-            .eq('phoneNumber', q); 
+            .or(`phoneNumber.ilike.%${q}%,aadharNumber.ilike.%${q}%`); 
 
         if (error) {
             return res.status(400).json({ status: "error", message: error.message });
